@@ -1,17 +1,15 @@
 {% load static %}
 
 <!DOCTYPE HTML>
-<!--
-	Forty by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
+
+
 <html>
 	<head>
-		<title>Xentiment</title>
+		<title>Zentiment</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+		<link rel="stylesheet" href="{% static 'assets/css/messages_tag.css' %}" />
 		<noscript><link rel="stylesheet" href="{% static 'assets/css/noscript.css' %}" /></noscript>
 	</head>
 
@@ -21,7 +19,7 @@
 
 				<!-- Header -->
 					<header id="header" class="alt">
-						<a href="{% url 'home' %}" class="logo"><strong>Xentiment</strong> <span>by Macsauce</span></a>
+						<a href="{% url 'home' %}" class="logo"><strong>Zentiment</strong> <span>by Macsauce</span></a>
 						<nav>
 							<a href="#menu">Menu</a>
 						</nav>
@@ -52,16 +50,24 @@
 					<div class="main">
                     <div class="inner">
                         <section>
-                            <form method="post" action="#">
+                            <form method="post" action="contact">
+								{% csrf_token %}
+								<div class="field half">
+									{% if messages %}
+										<ul class="messages">
+											{% for message in messages %}
+												<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+											{% endfor %}
+										</ul>
+									{% endif %}
+								<br>
+								</div>
                                 <div class="fields">
                                     <div class="field half">
-                                        <label for="name">Name</label>
-                                        <input type="text" name="name" id="name" />
+                                        <label for="name">Topic</label>
+                                        <input type="text" name="topic" id="topic" />
                                     </div>
-                                    <div class="field half">
-                                        <label for="email">Email</label>
-                                        <input type="text" name="email" id="email" />
-                                    </div>
+									
                                     <div class="field">
                                         <label for="message">Message</label>
                                         <textarea name="message" id="message" rows="6"></textarea>
@@ -74,13 +80,6 @@
                             </form>
                         </section>
                         <section class="split">
-                            <section>
-                                <div class="contact-method">
-                                    <span class="icon solid alt fa-envelope"></span>
-                                    <h3>Email</h3>
-                                    <a href="adebayoworkmail@gmail.com">contact@untitled.tld</a>
-                                </div>
-                            </section>
                             <section>
                                 <div class="contact-method">
                                     <span class="icon solid alt fa-phone"></span>

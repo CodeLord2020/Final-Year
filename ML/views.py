@@ -4,7 +4,10 @@ from .Bert1_sentiment import start_sentiment_analysis_BERT1
 from .VADER_sentiments import start_sentiment_analysis_VADER
 from .Distilledbert import start_sentiment_analysis_distilbert
 from django.contrib.auth.decorators import login_required
-
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
+from django.contrib import messages
+from django.conf import settings
 
 def landing(request):
     return render (request, 'templ/landing.html')
@@ -25,7 +28,6 @@ def home(request):
             return redirect('bert1_view', keyword=keyword)
         elif analysis_method == 'method4':
             return redirect('distilledberta_view', keyword=keyword)
-
 
     return render (request, 'templ/index.html')
 
@@ -161,8 +163,37 @@ def distilledberta_view(request, keyword):
 
     return render(request, 'templ/result_page.html', context)
 
+
+
 @login_required(login_url='login')
 def contact(request):
-    return render (request, 'templ/contact.html')
+    if request.method == 'POST':
+        subject = request.POST.get('topic')
+        message = request.POST.get('message')
+        user_email = request.user.email
+        username = request.user.username
+        email_from = settings.EMAIL_HOST_USER
+        email_to = settings.EMAIL_CONTACT
 
+        try:
+            # Send the email
+            send_mail(
+                'New Message from {}'.format(username),
+                '',  # Leave the body empty, as we'll use the HTML template
+                email_from,
+                [email_to],
+                html_message=render_to_string('auth/contact_email.html', {
+                    'subject': subject,
+                    'message': message,
+                    'username': username,
+                    'user_email': user_email,
+                })
+            )
 
+            messages.success(request, 'Message sent successfully')
+        except Exception as e:
+            messages.error(request, f'Failed to send message. Error: {e}')
+
+        return render(request, 'templ/contact.html')
+
+    return render(request, 'templ/contact.html')

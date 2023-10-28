@@ -1,0 +1,25 @@
+/* Success Message Style */
+.messages .success {
+    background-color: #4caf50; /* Green */
+    color: #ffffff; /* White */
+}
+
+/* Error Message Style */
+.messages .error {
+    background-color: #f44336; /* Red */
+    color: #ffffff; /* White */
+}
+
+.messages {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Info Message Style */
+.messages .info {
+    background-color: #2196f3; /* Blue */
+    color: #ffffff; /* White */
+}
